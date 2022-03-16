@@ -1,0 +1,7 @@
+.idea
+
+.env
+
+.bin/build
+
+reminder.db

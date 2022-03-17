@@ -10,13 +10,12 @@ import (
 const defaultText = "remind you about "
 
 type reminder struct {
-	ID         uint
-	UserId     int64
-	ChatId     int64
-	MessageId  int
-	Message    string
-	When       int64
-	IsReported bool
+	ID        uint
+	UserId    int64
+	ChatId    int64
+	MessageId int
+	Message   string
+	NotifyAt  int64
 }
 
 type parsedMessage struct {
@@ -25,7 +24,7 @@ type parsedMessage struct {
 }
 
 func remind(bot *tgbotapi.BotAPI, store storage) {
-	for {
+	for range time.Tick(3 * time.Second) {
 		reminders, err := store.find()
 
 		if err != nil {
@@ -34,17 +33,16 @@ func remind(bot *tgbotapi.BotAPI, store storage) {
 		}
 
 		for _, remind := range reminders {
-			remind := remind
+			r := remind
 			go func() {
-				_, err := bot.Send(remind.createMessage())
+				_, err := bot.Send(r.createMessage())
 
 				if err != nil {
 					logrus.Error(err)
 					return
 				}
 
-				remind.IsReported = true
-				err = store.save(remind)
+				err = store.delete(r.ID)
 
 				if err != nil {
 					logrus.Error(err)
@@ -52,8 +50,6 @@ func remind(bot *tgbotapi.BotAPI, store storage) {
 				}
 			}()
 		}
-
-		time.Sleep(1 * time.Minute)
 	}
 }
 
@@ -73,12 +69,11 @@ func createReminder(message *tgbotapi.Message, store storage) *tgbotapi.MessageC
 	parsedMessage := parse(message.Text)
 
 	reminder := &reminder{
-		UserId:     message.From.ID,
-		ChatId:     message.Chat.ID,
-		MessageId:  message.MessageID,
-		Message:    parsedMessage.text,
-		When:       parsedMessage.when,
-		IsReported: false,
+		UserId:    message.From.ID,
+		ChatId:    message.Chat.ID,
+		MessageId: message.MessageID,
+		Message:   parsedMessage.text,
+		NotifyAt:  parsedMessage.when,
 	}
 
 	err := store.save(reminder)

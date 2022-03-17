@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
@@ -45,7 +46,7 @@ func start() {
 	go remind(bot, store)
 
 	for update := range updates {
-		if update.Message == nil {
+		if skipMessage(update.Message) {
 			continue
 		}
 
@@ -55,4 +56,16 @@ func start() {
 			logrus.Error(err)
 		}
 	}
+}
+
+func skipMessage(message *tgbotapi.Message) bool {
+	if message == nil {
+		return true
+	}
+
+	if !strings.HasPrefix(message.Text, "!remindme") && !strings.HasPrefix(message.Text, "!rm") {
+		return true
+	}
+
+	return false
 }

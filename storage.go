@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -44,13 +46,21 @@ func (s *sqliteStorage) close() error {
 }
 
 func (s *sqliteStorage) find() ([]*reminder, error) {
-	return nil, nil
+	var reminders []*reminder
+
+	err := s.conn.Where("notify_at < ?", time.Now().Unix()).Find(&reminders).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return reminders, nil
 }
 
 func (s *sqliteStorage) save(reminder *reminder) error {
-	return nil
+	return s.conn.Save(reminder).Error
 }
 
 func (s *sqliteStorage) delete(id uint) error {
-	return nil
+	return s.conn.Delete(&reminder{}, id).Error
 }

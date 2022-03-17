@@ -32,10 +32,10 @@ func remind(bot *tgbotapi.BotAPI, store storage) {
 			continue
 		}
 
-		for _, remind := range reminders {
-			r := remind
+		for _, reminder := range reminders {
+			r := reminder
 			go func() {
-				_, err := bot.Send(r.createMessage())
+				_, err := bot.Send(newMessage(r.ChatId, defaultText+r.Message, r.MessageId))
 
 				if err != nil {
 					logrus.Error(err)
@@ -55,13 +55,6 @@ func remind(bot *tgbotapi.BotAPI, store storage) {
 
 func parse(text string) *parsedMessage {
 	return &parsedMessage{text: "not implemented yet", when: 12345678}
-}
-
-func (r *reminder) createMessage() *tgbotapi.MessageConfig {
-	msg := tgbotapi.NewMessage(r.ChatId, defaultText+r.Message)
-	msg.ReplyToMessageID = r.MessageId
-
-	return &msg
 }
 
 func createReminder(message *tgbotapi.Message, store storage) *tgbotapi.MessageConfig {
@@ -86,5 +79,5 @@ func createReminder(message *tgbotapi.Message, store storage) *tgbotapi.MessageC
 	msg := tgbotapi.NewMessage(message.Chat.ID, response)
 	msg.ReplyToMessageID = message.MessageID
 
-	return reminder.createMessage()
+	return newMessage(message.Chat.ID, response, message.MessageID)
 }

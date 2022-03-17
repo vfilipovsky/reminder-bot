@@ -69,3 +69,13 @@ func skipMessage(message *tgbotapi.Message) bool {
 
 	return false
 }
+
+func newMessage(chatId int64, text string, messageId int) *tgbotapi.MessageConfig {
+	msg := tgbotapi.NewMessage(chatId, text)
+
+	if messageId != 0 {
+		msg.ReplyToMessageID = messageId
+	}
+
+	return &msg
+}

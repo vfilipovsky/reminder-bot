@@ -12,8 +12,8 @@ Parse message
 ### Rules
 
 ```
-Message must starts with !remindme or !rm
-Then you write your reminder text and 
+Message must starts with !remindme
+then you write your reminder text and 
 ending it with your desired time
 
 y  - years
@@ -30,4 +30,5 @@ m  - minutes
 !remindme pay for the phone in 2h 30m
 !remindme buy a coffee tomorrow at 14:00
 !remindme wife birthday on September 30
+!remindme play football on Monday at 18:00
 ```

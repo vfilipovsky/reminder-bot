@@ -24,7 +24,7 @@ type parsedMessage struct {
 }
 
 func remind(bot *tgbotapi.BotAPI, store storage) {
-	for range time.Tick(3 * time.Second) {
+	for range time.Tick(5 * time.Second) {
 		reminders, err := store.find()
 
 		if err != nil {
@@ -54,7 +54,7 @@ func remind(bot *tgbotapi.BotAPI, store storage) {
 }
 
 func parse(text string) *parsedMessage {
-	return &parsedMessage{text: "not implemented yet", when: 12345678}
+	return &parsedMessage{text: "not implemented yet", when: 1647533120}
 }
 
 func createReminder(message *tgbotapi.Message, store storage) *tgbotapi.MessageConfig {

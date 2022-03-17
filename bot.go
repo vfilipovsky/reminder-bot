@@ -63,7 +63,7 @@ func skipMessage(message *tgbotapi.Message) bool {
 		return true
 	}
 
-	if !strings.HasPrefix(message.Text, "!remindme") && !strings.HasPrefix(message.Text, "!rm") {
+	if !strings.HasPrefix(message.Text, "!remindme") {
 		return true
 	}
 

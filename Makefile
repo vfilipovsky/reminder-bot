@@ -6,13 +6,13 @@ install:
 	${GO} get ./...
 
 dev:
-	${GO} run cmd/server/main.go
+	${GO} run .
 
 build:
-	${GO} build -o .bin/build ./cmd/server/main.go
+	${GO} build -o .bin/build .
 
 build-and-run:
-	${GO} build -o .bin/build ./main.go && ./.bin/build
+	${GO} build -o .bin/build . && ./.bin/build
 
 fmt:
 	${GO} fmt ./...
